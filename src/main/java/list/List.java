@@ -1,29 +1,17 @@
 package list;
 
-// List, Set, Map
-public interface List {
-    // add value to the end of the list
-    void add(Object value);
 
-    // we can add value by index between [0, size]
-    // otherwise throw new IndexOutOfBoundsException
-    void add(Object value, int index);
+public interface List<T> {
 
-    // we can remove value by index between [0, size - 1]
-    // otherwise throw new IndexOutOfBoundsException
+    void add(T value);
 
-    // [A, B, C] remove = 0
-    // [B (index = 0) , C (index = 1)]
-    Object remove(int index);
+    void add(T value, int index);
 
-    // [A, B, C] size = 3
-    // we can get value by index between [0, size - 1]
-    // otherwise throw new IndexOutOfBoundsException
-    Object get(int index);
+    T remove(int index);
 
-    // we can set value by index between [0, size - 1]
-    // otherwise throw new IndexOutOfBoundsException
-    Object set(Object value, int index);
+    T get(int index);
+
+    T set(T value, int index);
 
     void clear();
 
@@ -31,12 +19,11 @@ public interface List {
 
     boolean isEmpty();
 
-    boolean contains(Object value);
+    boolean contains(T value);
 
-    int indexOf(Object value);
+    int indexOf(T value);
 
-    int lastIndexOf(Object value);
+    int lastIndexOf(T value);
 
-    // [A, B, C]
     String toString();
 }

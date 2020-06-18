@@ -6,22 +6,24 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class ArrayList implements List {
-    private Object[] array;
+public class ArrayList<T> implements List<T> {
+    private final static int INITIAL_SIZE = 10;
+    private T[] array;
     private int size = 0;
     private int capacity;
 
+
     public ArrayList(int n) {
-        array = new Object[n];
+        array = (T[]) new Object[n];
         capacity = n;
     }
 
     public ArrayList() {
-        array = new Object[10];
-        capacity = 10;
+        array = (T[]) new Object[INITIAL_SIZE];
+        capacity = INITIAL_SIZE;
     }
 
-    public void add(Object value) {
+    public void add(T value) {
         if (size == capacity) {
             extendArray();
         }
@@ -35,14 +37,14 @@ public class ArrayList implements List {
         capacity = newCapacity;
     }
 
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index should be in range [0, " + size + "]");
         }
         if (index == size) {
             add(value);
         } else {
-            Object[] newArray = new Object[capacity];
+            T[] newArray = (T[]) new Object[capacity];
             System.arraycopy(array, 0, newArray, 0, index);
             newArray[index] = value;
             System.arraycopy(array, index, newArray, index + 1, size - index + 1);
@@ -51,13 +53,13 @@ public class ArrayList implements List {
         }
     }
 
-    public Object remove(int index) {
+    public T remove(int index) {
         validateIndex(index);
-        Object removedObject = array[index];
+        T removedObject = array[index];
         if (index == 0) {
             System.arraycopy(array, 1, array, 0, size - 1);
         } else if (index != size - 1) {
-            Object[] newArray = new Object[capacity];
+            T[] newArray = (T[]) new Object[capacity];
             System.arraycopy(array, 0, newArray, 0, index);
             System.arraycopy(array, index + 1, newArray, index, size - index);
             array = newArray;
@@ -66,14 +68,14 @@ public class ArrayList implements List {
         return removedObject;
     }
 
-    public Object get(int index) {
+    public T get(int index) {
         validateIndex(index);
         return array[index];
     }
 
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         validateIndex(index);
-        Object oldValue = array[index];
+        T oldValue = array[index];
         array[index] = value;
         return oldValue;
     }
@@ -90,11 +92,11 @@ public class ArrayList implements List {
         return (size == 0);
     }
 
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return (indexOf(value) != -1);
     }
 
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(value, array[i])) {
                 return i;
@@ -103,7 +105,7 @@ public class ArrayList implements List {
         return -1;
     }
 
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
         for (int i = size - 1; i >= 0; i--) {
             if (Objects.equals(value, array[i])) {
                 return i;

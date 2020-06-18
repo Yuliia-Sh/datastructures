@@ -5,13 +5,13 @@ import list.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class LinkedList implements List {
-    private Node head;
-    private Node tail;
+public class LinkedList<T> implements List<T> {
+    private Node<T> head;
+    private Node<T> tail;
     private int size = 0;
 
-    public void add(Object value) {
-        Node node = new Node();
+    public void add(T value) {
+        Node<T> node = new Node<T>();
         node.value = value;
         if (size == 0) {
             head = node;
@@ -24,11 +24,11 @@ public class LinkedList implements List {
         size++;
     }
 
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index should be in range [0, " + size + "]");
         }
-        Node node = new Node();
+        Node<T> node = new Node<T>();
         node.value = value;
 
         if (index == 0) {
@@ -42,8 +42,8 @@ public class LinkedList implements List {
             node.previous = tail;
             tail = node;
         } else {
-            Node nodeBefore = getNode(index - 1);
-            Node nodeAfter = nodeBefore.next;
+            Node<T> nodeBefore = getNode(index - 1);
+            Node<T> nodeAfter = nodeBefore.next;
             nodeBefore.next = node;
             nodeAfter.previous = node;
             node.next = nodeAfter;
@@ -52,9 +52,9 @@ public class LinkedList implements List {
         size++;
     }
 
-    public Object remove(int index) {
+    public T remove(int index) {
         validateIndex(index);
-        Node nodeToRemove;
+        Node<T> nodeToRemove;
         if (index == 0) {
             nodeToRemove = head;
             head = head.next;
@@ -65,8 +65,8 @@ public class LinkedList implements List {
             tail.next = null;
         } else {
             nodeToRemove = getNode(index);
-            Node previousNode = nodeToRemove.previous;
-            Node nextNode = nodeToRemove.next;
+            Node<T> previousNode = nodeToRemove.previous;
+            Node<T> nextNode = nodeToRemove.next;
             previousNode.next = nextNode;
             nextNode.previous = previousNode;
         }
@@ -74,16 +74,16 @@ public class LinkedList implements List {
         return nodeToRemove.value;
     }
 
-    public Object get(int index) {
+    public T get(int index) {
         validateIndex(index);
-        Node node = getNode(index);
+        Node<T> node = getNode(index);
         return node.value;
     }
 
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         validateIndex(index);
-        Node node = getNode(index);
-        Object oldValue = node.value;
+        Node<T> node = getNode(index);
+        T oldValue = node.value;
         node.value = value;
         return oldValue;
     }
@@ -102,12 +102,12 @@ public class LinkedList implements List {
         return (size == 0);
     }
 
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return (indexOf(value) != -1);
     }
 
-    public int indexOf(Object value) {
-        Node node = head;
+    public int indexOf(T value) {
+        Node<T> node = head;
         int i = 0;
         while (node != null) {
             if (Objects.equals(value, node.value)) {
@@ -119,8 +119,8 @@ public class LinkedList implements List {
         return -1;
     }
 
-    public int lastIndexOf(Object value) {
-        Node node = tail;
+    public int lastIndexOf(T value) {
+        Node<T> node = tail;
         int i = size - 1;
         while (node != null) {
             if (Objects.equals(value, node.value)) {
@@ -134,7 +134,7 @@ public class LinkedList implements List {
 
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
-        Node node = head;
+        Node<T> node = head;
         while (node != null) {
             stringJoiner.add(node.value.toString());
             node = node.next;
@@ -142,8 +142,8 @@ public class LinkedList implements List {
         return stringJoiner.toString();
     }
 
-    private Node getNode(int index) {
-        Node node = head;
+    private Node<T> getNode(int index) {
+        Node<T> node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
         }
@@ -156,9 +156,9 @@ public class LinkedList implements List {
         }
     }
 
-    private static class Node {
-        Object value;
-        Node next;
-        Node previous;
+    private static class Node<T> {
+        T value;
+        Node<T> next;
+        Node<T> previous;
     }
 }

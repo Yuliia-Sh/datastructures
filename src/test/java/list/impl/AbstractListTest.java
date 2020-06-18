@@ -2,14 +2,12 @@ package list.impl;
 
 import list.List;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AbstractListTest {
-    private List list = new LinkedList();
+    private List<Integer> list = new ArrayList<>();
 
     /* @BeforeEach
      public void setList() {
@@ -56,9 +54,12 @@ public class AbstractListTest {
         list.add(2);
         list.add(3);
 
-        assertEquals(1, list.get(0));
-        assertEquals(2, list.get(1));
-        assertEquals(3, list.get(2));
+        Integer expectedFirst = 1;
+        Integer expectedSecond = 2;
+        Integer expectedThird = 3;
+        assertEquals(expectedFirst, list.get(0));
+        assertEquals(expectedSecond, list.get(1));
+        assertEquals(expectedThird, list.get(2));
     }
 
     @Test
