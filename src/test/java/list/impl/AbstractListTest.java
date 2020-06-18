@@ -9,15 +9,15 @@ import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AbstractListTest {
-    private List list = new ArrayList();
+    private List list = new LinkedList();
 
-   /* @BeforeEach
-    public void setList() {
-        list = getList();
-    }
+    /* @BeforeEach
+     public void setList() {
+         list = getList();
+     }
 
-    protected abstract List getList();
-*/
+     protected abstract List getList();
+ */
     @Test
     public void testToString() {
         assertEquals("[]", list.toString());
@@ -184,7 +184,9 @@ public class AbstractListTest {
     public void testClearEmptyList() {
         list.clear();
         assertEquals(0, list.size());
-    };
+    }
+
+    ;
 
     @Test
     public void testClear() {
