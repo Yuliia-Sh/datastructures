@@ -1,7 +1,7 @@
-package list.impl;
+package com.study.datastructures.list.impl;
 
 
-import list.List;
+import com.study.datastructures.list.List;
 
 public class LinkedListTest extends AbstractListTest {
 

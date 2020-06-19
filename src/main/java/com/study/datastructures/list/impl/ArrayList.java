@@ -1,6 +1,6 @@
-package list.impl;
+package com.study.datastructures.list.impl;
 
-import list.List;
+import com.study.datastructures.list.List;
 
 import java.util.Arrays;
 import java.util.Objects;

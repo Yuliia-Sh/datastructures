@@ -1,4 +1,4 @@
-package list;
+package com.study.datastructures.list;
 
 
 public interface List<T> {
