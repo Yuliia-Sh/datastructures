@@ -2,17 +2,17 @@ package com.study.datastructures.map;
 
 import java.util.ArrayList;
 
-public class HashMap implements Map {
+public class HashMap<K, V> implements Map<K, V> {
     private static final int INITIAL_CAPACITY = 5;
 
-    private ArrayList<Entry>[] buckets = new ArrayList[INITIAL_CAPACITY];
+    private ArrayList<Entry<K, V>>[] buckets = new ArrayList[INITIAL_CAPACITY];
     private int size;
 
     @Override
-    public Object put(Object key, Object value) {
-        Object oldValue = null;
+    public V put(K key, V value) {
+        V oldValue = null;
 
-        Entry entry = getEntry(key);
+        Entry<K, V> entry = getEntry(key);
         if (entry != null) {
             oldValue = entry.value;
             entry.value = value;
@@ -25,8 +25,8 @@ public class HashMap implements Map {
 
 
     @Override
-    public Object get(Object key) {
-        Entry entry = getEntry(key);
+    public V get(K key) {
+        Entry<K, V> entry = getEntry(key);
         if (entry != null) {
             return entry.value;
         }
@@ -34,14 +34,14 @@ public class HashMap implements Map {
     }
 
     @Override
-    public Object remove(Object key) {
+    public V remove(K key) {
         int numBucket = getNumBucket(key);
 
         if (buckets[numBucket] != null) {
             for (int i = 0; i < buckets[numBucket].size(); i++) {
-                Entry currentEntry = buckets[numBucket].get(i);
+                Entry<K, V> currentEntry = buckets[numBucket].get(i);
                 if (currentEntry.key.equals(key)) {
-                    Object removedValue = currentEntry.value;
+                    V removedValue = currentEntry.value;
                     buckets[numBucket].remove(i);
                     size--;
                     return removedValue;
@@ -52,15 +52,12 @@ public class HashMap implements Map {
     }
 
     @Override
-    public void putAll(Map map) {
-        if (map.size() != 0) {
-
-        }
+    public void putAll(Map<K, V> map) {
     }
 
     @Override
-    public Object putIfAbsent(Object key, Object value) {
-        Object presentValue = get(key);
+    public V putIfAbsent(K key, V value) {
+        V presentValue = get(key);
 
         if (presentValue == null) {
             add(key, value);
@@ -80,14 +77,14 @@ public class HashMap implements Map {
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(K key) {
         return (get(key) != null);
     }
 
-    private Entry getEntry(Object key) {
+    private Entry<K, V> getEntry(K key) {
         int numBucket = getNumBucket(key);
         if (buckets[numBucket] != null) {
-            for (Entry entry : buckets[numBucket]) {
+            for (Entry<K, V> entry : buckets[numBucket]) {
                 if (entry.key.equals(key)) {
                     return entry;
                 }
@@ -96,24 +93,24 @@ public class HashMap implements Map {
         return null;
     }
 
-    private void add(Object key, Object value) {
+    private void add(K key, V value) {
         int numBucket = getNumBucket(key);
         if (buckets[numBucket] == null) {
             buckets[numBucket] = new ArrayList<>();
         }
-        buckets[numBucket].add(new Entry(key, value));
+        buckets[numBucket].add(new Entry<K, V>(key, value));
         size++;
     }
 
-    private int getNumBucket(Object key) {
+    private int getNumBucket(K key) {
         return key.hashCode() % INITIAL_CAPACITY;
     }
 
-    private static class Entry {
-        private Object key;
-        private Object value;
+    private static class Entry<K, V> {
+        private final K key;
+        private V value;
 
-        public Entry(Object key, Object value) {
+        public Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }

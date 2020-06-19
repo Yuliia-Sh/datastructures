@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class HashMapTest {
-    private HashMap hashMap = new HashMap();
+    private HashMap<String, String> hashMap = new HashMap<>();
 
     @Test
     public void testPut() {
