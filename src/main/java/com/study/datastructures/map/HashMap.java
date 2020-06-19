@@ -11,24 +11,13 @@ public class HashMap implements Map {
     @Override
     public Object put(Object key, Object value) {
         Object oldValue = null;
-        boolean isUpdated = false;
-        int numBucket = getNumBucket(key);
 
-        if (buckets[numBucket] == null) {
-            add(key, value, numBucket);
+        Entry entry = getEntry(key);
+        if (entry != null) {
+            oldValue = entry.value;
+            entry.value = value;
         } else {
-            for (Entry entry : buckets[numBucket]) {
-                if (entry.key.equals(key)) {
-                    oldValue = entry.value;
-                    entry.value = value;
-                    isUpdated = true;
-                }
-            }
-
-            if (!isUpdated) {
-                buckets[numBucket].add(new Entry(key, value));
-                size++;
-            }
+            add(key, value);
         }
 
         return oldValue;
@@ -37,13 +26,9 @@ public class HashMap implements Map {
 
     @Override
     public Object get(Object key) {
-        int numBucket = getNumBucket(key);
-        if (buckets[numBucket] != null) {
-            for (Entry entry : buckets[numBucket]) {
-                if (entry.key.equals(key)) {
-                    return entry.value;
-                }
-            }
+        Entry entry = getEntry(key);
+        if (entry != null) {
+            return entry.value;
         }
         return null;
     }
@@ -75,22 +60,10 @@ public class HashMap implements Map {
 
     @Override
     public Object putIfAbsent(Object key, Object value) {
-        int numBucket = getNumBucket(key);
-        Object presentValue = null;
-        boolean isAbsent = true;
+        Object presentValue = get(key);
 
-        if (buckets[numBucket] != null) {
-            for (int i = 0; (i < buckets[numBucket].size()) && isAbsent; i++) {
-                Entry currentEntry = buckets[numBucket].get(i);
-                if (currentEntry.key.equals(key)) {
-                    presentValue = currentEntry.value;
-                    isAbsent = false;
-                }
-            }
-        }
-
-        if (isAbsent) {
-            add(key, value, numBucket);
+        if (presentValue == null) {
+            add(key, value);
         }
 
         return presentValue;
@@ -111,7 +84,20 @@ public class HashMap implements Map {
         return (get(key) != null);
     }
 
-    private void add(Object key, Object value, int numBucket) {
+    private Entry getEntry(Object key) {
+        int numBucket = getNumBucket(key);
+        if (buckets[numBucket] != null) {
+            for (Entry entry : buckets[numBucket]) {
+                if (entry.key.equals(key)) {
+                    return entry;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void add(Object key, Object value) {
+        int numBucket = getNumBucket(key);
         if (buckets[numBucket] == null) {
             buckets[numBucket] = new ArrayList<>();
         }
