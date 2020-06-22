@@ -1,15 +1,15 @@
 package com.study.datastructures.map;
 
-public interface Map<K,V> {
+public interface Map<K, V> {
     V put(K key, V value);
 
     V get(K key);
 
     V remove(K key);
 
-    void putAll(Map<K,V> map);
+    void putAll(Map<K, V> map);
 
-    V putIfAbsent (K key, V value);
+    V putIfAbsent(K key, V value);
 
     int size();
 

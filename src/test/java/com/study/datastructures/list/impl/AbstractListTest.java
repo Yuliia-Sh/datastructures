@@ -2,20 +2,21 @@ package com.study.datastructures.list.impl;
 
 import com.study.datastructures.list.List;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AbstractListTest {
-    private List<Integer> list = new ArrayList<>();
+public abstract class AbstractListTest {
+    private List<Integer> list = getList();
 
-    /* @BeforeEach
-     public void setList() {
-         list = getList();
-     }
+    @BeforeEach
+    public void setList() {
+        list = getList();
+    }
 
-     protected abstract List getList();
- */
+    protected abstract List getList();
+
     @Test
     public void testToString() {
         assertEquals("[]", list.toString());
