@@ -1,6 +1,5 @@
-package com.study.datastructures.list.impl;
+package com.study.datastructures.list;
 
-import com.study.datastructures.list.List;
 import org.junit.Test;
 
 public class ArrayListTest extends AbstractListTest {
@@ -16,5 +15,11 @@ public class ArrayListTest extends AbstractListTest {
         list.add(2);
         list.add(3);
         list.add(4);
+    }
+
+    @Test
+    public void testArrayWith0InitialCapacity() {
+        List list = new ArrayList(0);
+        list.add(1);
     }
 }

@@ -1,6 +1,7 @@
 package com.study.datastructures.map;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HashMap<K, V> implements Map<K, V> {
     private static final int INITIAL_CAPACITY = 5;
@@ -35,17 +36,19 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public V remove(K key) {
-        int numBucket = getNumBucket(key);
+        int numBucket = getBucketIndex(key);
 
-        if (buckets[numBucket] != null) {
-            for (int i = 0; i < buckets[numBucket].size(); i++) {
-                Entry<K, V> currentEntry = buckets[numBucket].get(i);
-                if (currentEntry.key.equals(key)) {
-                    V removedValue = currentEntry.value;
-                    buckets[numBucket].remove(i);
-                    size--;
-                    return removedValue;
-                }
+        if (buckets[numBucket] == null) {
+            return null;
+        }
+
+        for (int i = 0; i < buckets[numBucket].size(); i++) {
+            Entry<K, V> currentEntry = buckets[numBucket].get(i);
+            if (Objects.equals(currentEntry.key, key)) {
+                V removedValue = currentEntry.value;
+                buckets[numBucket].remove(i);
+                size--;
+                return removedValue;
             }
         }
         return null;
@@ -82,10 +85,10 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private Entry<K, V> getEntry(K key) {
-        int numBucket = getNumBucket(key);
+        int numBucket = getBucketIndex(key);
         if (buckets[numBucket] != null) {
             for (Entry<K, V> entry : buckets[numBucket]) {
-                if (entry.key.equals(key)) {
+                if (Objects.equals(entry.key, key)) {
                     return entry;
                 }
             }
@@ -94,7 +97,7 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private void add(K key, V value) {
-        int numBucket = getNumBucket(key);
+        int numBucket = getBucketIndex(key);
         if (buckets[numBucket] == null) {
             buckets[numBucket] = new ArrayList<>();
         }
@@ -102,8 +105,11 @@ public class HashMap<K, V> implements Map<K, V> {
         size++;
     }
 
-    private int getNumBucket(K key) {
-        return key.hashCode() % INITIAL_CAPACITY;
+    private int getBucketIndex(K key) {
+        if (key == null) {
+            return 0;
+        }
+        return Math.abs(key.hashCode()) % INITIAL_CAPACITY;
     }
 
     private static class Entry<K, V> {

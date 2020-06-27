@@ -1,6 +1,5 @@
-package com.study.datastructures.list.impl;
+package com.study.datastructures.list;
 
-import com.study.datastructures.list.List;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -33,6 +32,13 @@ public abstract class AbstractListTest {
         list.add(1);
         list.add(2);
         assertEquals("[1, 2]", list.toString());
+    }
+
+    @Test
+    public void testToStringNull() {
+        list.add(null);
+        list.add(2);
+        assertEquals("[null, 2]", list.toString());
     }
 
     @Test

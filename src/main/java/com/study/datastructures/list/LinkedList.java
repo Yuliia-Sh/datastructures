@@ -1,53 +1,41 @@
-package com.study.datastructures.list.impl;
+package com.study.datastructures.list;
 
-import com.study.datastructures.list.List;
-
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class LinkedList<T> implements List<T> {
+public class LinkedList<T> extends AbstractList<T> implements List<T> {
     private Node<T> head;
     private Node<T> tail;
-    private int size = 0;
 
     public void add(T value) {
-        Node<T> node = new Node<T>();
-        node.value = value;
-        if (size == 0) {
-            head = node;
-            tail = node;
-        } else {
-            tail.next = node;
-            node.previous = tail;
-            tail = node;
-        }
-        size++;
+        add(value, size);
     }
 
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index should be in range [0, " + size + "]");
         }
-        Node<T> node = new Node<T>();
-        node.value = value;
+        Node<T> node = new Node<T>(value);
 
-        if (index == 0) {
+        if (size == 0) {
+            head = node;
+            tail = node;
+        } else if (index == 0) {
             node.next = head;
-            if (size > 0) {
-                head.next.previous = node;
-            }
+            head.next.prev = node;
             head = node;
         } else if (index == size) {
             tail.next = node;
-            node.previous = tail;
+            node.prev = tail;
             tail = node;
         } else {
             Node<T> nodeBefore = getNode(index - 1);
             Node<T> nodeAfter = nodeBefore.next;
             nodeBefore.next = node;
-            nodeAfter.previous = node;
+            nodeAfter.prev = node;
             node.next = nodeAfter;
-            node.previous = nodeBefore;
+            node.prev = nodeBefore;
         }
         size++;
     }
@@ -58,17 +46,17 @@ public class LinkedList<T> implements List<T> {
         if (index == 0) {
             nodeToRemove = head;
             head = head.next;
-            head.previous = null;
+            head.prev = null;
         } else if (index == size - 1) {
             nodeToRemove = tail;
-            tail = tail.previous;
+            tail = tail.prev;
             tail.next = null;
         } else {
             nodeToRemove = getNode(index);
-            Node<T> previousNode = nodeToRemove.previous;
+            Node<T> previousNode = nodeToRemove.prev;
             Node<T> nextNode = nodeToRemove.next;
             previousNode.next = nextNode;
-            nextNode.previous = previousNode;
+            nextNode.prev = previousNode;
         }
         size--;
         return nodeToRemove.value;
@@ -126,7 +114,7 @@ public class LinkedList<T> implements List<T> {
             if (Objects.equals(value, node.value)) {
                 return i;
             }
-            node = node.previous;
+            node = node.prev;
             i--;
         }
         return -1;
@@ -136,7 +124,7 @@ public class LinkedList<T> implements List<T> {
         StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
         Node<T> node = head;
         while (node != null) {
-            stringJoiner.add(node.value.toString());
+            stringJoiner.add(String.valueOf(node.value));
             node = node.next;
         }
         return stringJoiner.toString();
@@ -144,21 +132,32 @@ public class LinkedList<T> implements List<T> {
 
     private Node<T> getNode(int index) {
         Node<T> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
+        int middle = size / 2;
+        if (index < middle) {
+            for (int i = 0; i < index; i++) {
+                node = node.next;
+            }
+        } else {
+            node = tail;
+            for (int i = size - 1; i > index; i--) {
+                node = node.prev;
+            }
         }
         return node;
     }
 
-    private void validateIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index should be in range [0, " + (size - 1) + "]");
-        }
+    @Override
+    public Iterator<T> iterator() {
+        return null;
     }
 
     private static class Node<T> {
         T value;
-        Node<T> next;
-        Node<T> previous;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T value) {
+            this.value = value;
+        }
     }
 }
