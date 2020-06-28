@@ -22,10 +22,6 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
         this(DEFAULT_INITIAL_CAPACITY);
     }
 
-    public void add(T value) {
-        add(value, size);
-    }
-
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index should be in range [0, " + size + "]");

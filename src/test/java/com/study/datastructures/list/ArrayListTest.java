@@ -4,13 +4,13 @@ import org.junit.Test;
 
 public class ArrayListTest extends AbstractListTest {
 
-    protected List getList() {
-        return new ArrayList(5);
+    protected List<Integer> getList() {
+        return new ArrayList<Integer>(5);
     }
 
     @Test
     public void testExtendArray() {
-        List list = new ArrayList(1);
+        List<Integer> list = new ArrayList<Integer>(1);
         list.add(1);
         list.add(2);
         list.add(3);
@@ -19,7 +19,7 @@ public class ArrayListTest extends AbstractListTest {
 
     @Test
     public void testArrayWith0InitialCapacity() {
-        List list = new ArrayList(0);
+        List<Integer> list = new ArrayList<Integer>(0);
         list.add(1);
     }
 }

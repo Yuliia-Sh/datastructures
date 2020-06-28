@@ -15,6 +15,12 @@ public abstract class AbstractList<T> {
         return indexOf(value) != -1;
     }
 
+    public void add(T value) {
+        add(value, size);
+    }
+
+    protected abstract void add(T value, int index);
+
     protected abstract int indexOf(T value);
 
     protected void validateIndex(int index) {
