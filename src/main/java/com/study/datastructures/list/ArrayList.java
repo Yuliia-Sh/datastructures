@@ -92,7 +92,7 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new ArrayListIterator<>();
     }
 
 
@@ -101,4 +101,20 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
         array = Arrays.copyOfRange(array, 0, newCapacity);
     }
 
+    private class ArrayListIterator<T> implements Iterator<T> {
+        private int currentPosition = -1;
+
+        @Override
+        public boolean hasNext() {
+            return currentPosition < size;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public T next() {
+            currentPosition++;
+            return (T) array[currentPosition];
+        }
+
+    }
 }

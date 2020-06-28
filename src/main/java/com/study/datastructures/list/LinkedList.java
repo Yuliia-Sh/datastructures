@@ -8,10 +8,6 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
     private Node<T> head;
     private Node<T> tail;
 
-    public void add(T value) {
-        add(value, size);
-    }
-
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index should be in range [0, " + size + "]");
@@ -23,7 +19,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
             tail = node;
         } else if (index == 0) {
             node.next = head;
-            head.next.prev = node;
+            head.prev = node;
             head = node;
         } else if (index == size) {
             tail.next = node;
@@ -82,18 +78,6 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
         size = 0;
     }
 
-    public int size() {
-        return size;
-    }
-
-    public boolean isEmpty() {
-        return (size == 0);
-    }
-
-    public boolean contains(T value) {
-        return (indexOf(value) != -1);
-    }
-
     public int indexOf(T value) {
         Node<T> node = head;
         int i = 0;
@@ -148,7 +132,24 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new LinkedListIterator<>();
+    }
+
+    private class LinkedListIterator<T> implements Iterator<T> {
+        private Node<T> currentNode = (Node<T>) head;
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public T next() {
+            T value = currentNode.value;
+            currentNode = currentNode.next;
+            return value;
+        }
+
     }
 
     private static class Node<T> {

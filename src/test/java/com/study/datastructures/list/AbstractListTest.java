@@ -3,6 +3,8 @@ package com.study.datastructures.list;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -309,4 +311,27 @@ public abstract class AbstractListTest {
         assertEquals(1, list.indexOf(3));
     }
 
+    @Test
+    public void testIterator() {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> it = list.iterator();
+
+        Integer[] listOfInteger = new Integer[4];
+        int i = 0;
+        while(it.hasNext()) {
+            Integer obj = it.next();
+            listOfInteger[i] = obj;
+            i++;
+        }
+
+        Integer one = 1;
+        Integer two = 2;
+        Integer three = 3;
+        assertEquals(one, listOfInteger[0]);
+        assertEquals(two, listOfInteger[1]);
+        assertEquals(three, listOfInteger[2]);
+    }
 }
