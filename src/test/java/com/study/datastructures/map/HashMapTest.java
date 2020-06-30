@@ -167,4 +167,27 @@ public class HashMapTest {
         }
         assertEquals(0, hashMap.size());
     }
+
+    @Test
+    public void testIteratorRemoveSome() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+        hashMap.put("key3", "value3");
+        hashMap.put("key4", "value4");
+        hashMap.put("key5", "value5");
+        hashMap.put("key6", "value6");
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
+            if (entry.getKey().equals("key2") || entry.getKey().equals("key4")) {
+                iterator.remove();
+            }
+        }
+
+        assertEquals(4, hashMap.size());
+        assertFalse(hashMap.containsKey("key2"));
+        assertFalse(hashMap.containsKey("key4"));
+
+    }
 }
