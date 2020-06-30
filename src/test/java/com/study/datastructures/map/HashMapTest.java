@@ -3,7 +3,11 @@ package com.study.datastructures.map;
 import org.junit.Test;
 
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HashMapTest {
     private HashMap<String, String> hashMap = new HashMap<>();
@@ -56,7 +60,7 @@ public class HashMapTest {
         assertNull(hashMap.remove("key1"));
     }
 
-   /* @Test
+    @Test
     public void testPutAll() {
         hashMap.put("key1", "value1");
         hashMap.put("key2", "value2");
@@ -72,7 +76,7 @@ public class HashMapTest {
         assertEquals("value3", hashMap.get("key3"));
         assertEquals("value4", hashMap.get("key4"));
     }
-*/
+
     @Test
     public void testPutAllFromEmptyMap() {
         hashMap.put("key1", "value1");
@@ -117,5 +121,50 @@ public class HashMapTest {
         assertTrue(hashMap.containsKey("key1"));
         assertTrue(hashMap.containsKey("key2"));
         assertFalse(hashMap.containsKey("key3"));
+    }
+
+    @Test
+    public void testIteratorEmptyMap() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testIteratorHasNext() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        hashMap.put("key1", "value1");
+        assertTrue(iterator.hasNext());
+    }
+
+    @Test
+    public void testIterator() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+        assertTrue(iterator.hasNext());
+        Map.Entry<String, String> entryFirst = iterator.next();
+        assertTrue(hashMap.containsKey(entryFirst.getKey()));
+
+        assertTrue(iterator.hasNext());
+        Map.Entry<String, String> entrySecond = iterator.next();
+        assertTrue(hashMap.containsKey(entrySecond.getKey()));
+        assertFalse(iterator.hasNext());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            iterator.next();
+        });
+    }
+
+    @Test
+    public void testIteratorRemove() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
+            iterator.remove();
+        }
+        assertEquals(0, hashMap.size());
     }
 }

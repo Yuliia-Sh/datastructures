@@ -1,6 +1,7 @@
 package com.study.datastructures.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -41,21 +42,12 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
         Node<T> nodeToRemove;
         if (index == 0) {
             nodeToRemove = head;
-            head = head.next;
-            head.prev = null;
         } else if (index == size - 1) {
             nodeToRemove = tail;
-            tail = tail.prev;
-            tail.next = null;
         } else {
             nodeToRemove = getNode(index);
-            Node<T> previousNode = nodeToRemove.prev;
-            Node<T> nextNode = nodeToRemove.next;
-            previousNode.next = nextNode;
-            nextNode.prev = previousNode;
         }
-        size--;
-        return nodeToRemove.value;
+        return removeNode(nodeToRemove);
     }
 
     public T get(int index) {
@@ -114,6 +106,11 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
         return stringJoiner.toString();
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListIterator();
+    }
+
     private Node<T> getNode(int index) {
         Node<T> node = head;
         int middle = size / 2;
@@ -130,26 +127,68 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
         return node;
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return new LinkedListIterator<>();
+    public T removeNode(Node<T> nodeToRemove) {
+        if (size == 1) {
+            head = null;
+            tail = null;
+        } else if (nodeToRemove == head) {
+            head = head.next;
+            head.prev = null;
+        } else if (nodeToRemove == tail) {
+            tail = tail.prev;
+            tail.next = null;
+        } else {
+            Node<T> previousNode = nodeToRemove.prev;
+            Node<T> nextNode = nodeToRemove.next;
+            previousNode.next = nextNode;
+            nextNode.prev = previousNode;
+        }
+
+        nodeToRemove.next = null;
+        nodeToRemove.prev = null;
+
+        size--;
+        return nodeToRemove.value;
     }
 
-    private class LinkedListIterator<T> implements Iterator<T> {
-        private Node<T> currentNode = (Node<T>) head;
+    private class LinkedListIterator implements Iterator<T> {
+        private Node<T> currentNode = head;
+        private boolean isFirstElement = true;
 
         @Override
         public boolean hasNext() {
-            return currentNode != null;
+            if (size == 0) {
+                return false;
+            }
+            return isFirstElement || currentNode.next != null;
         }
 
         @Override
         public T next() {
-            T value = currentNode.value;
-            currentNode = currentNode.next;
-            return value;
+            if (size == 0 || (!isFirstElement && currentNode.next == null)) {
+                throw new NoSuchElementException();
+            }
+            if (isFirstElement) {
+                isFirstElement = false;
+            } else {
+                currentNode = currentNode.next;
+            }
+            return currentNode.value;
         }
 
+        @Override
+        public void remove() {
+            if (currentNode == head && size > 1) {
+                isFirstElement = true;
+            }
+            Node<T> prevNode = currentNode.prev;
+            LinkedList.this.removeNode(currentNode);
+            if (isFirstElement) {
+                currentNode = head;
+            } else {
+                currentNode = prevNode;
+            }
+        }
     }
 
     private static class Node<T> {

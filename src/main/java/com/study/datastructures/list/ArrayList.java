@@ -1,9 +1,6 @@
 package com.study.datastructures.list;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class ArrayList<T> extends AbstractList<T> implements List<T> {
     private final static int DEFAULT_INITIAL_CAPACITY = 10;
@@ -92,7 +89,7 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new ArrayListIterator<>();
+        return new ArrayListIterator();
     }
 
 
@@ -101,20 +98,29 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
         array = Arrays.copyOfRange(array, 0, newCapacity);
     }
 
-    private class ArrayListIterator<T> implements Iterator<T> {
+    private class ArrayListIterator implements Iterator<T> {
         private int currentPosition = -1;
 
         @Override
         public boolean hasNext() {
-            return currentPosition < size;
+            return currentPosition + 1 < size;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public T next() {
+            if (currentPosition + 1 == size) {
+                throw new NoSuchElementException();
+            }
             currentPosition++;
             return (T) array[currentPosition];
         }
 
+        @Override
+        public void remove() {
+            ArrayList.this.remove(currentPosition);
+            if (currentPosition >= 0 && currentPosition != size) {
+                currentPosition--;
+            }
+        }
     }
 }

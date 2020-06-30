@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -275,6 +276,15 @@ public abstract class AbstractListTest {
     }
 
     @Test
+    public void testRemoveFromOneElementArray() {
+        list.add(1);
+
+        list.remove(0);
+
+        assertEquals(0, list.size());
+    }
+
+    @Test
     public void testRemoveLast() {
         list.add(1);
         list.add(2);
@@ -312,6 +322,15 @@ public abstract class AbstractListTest {
     }
 
     @Test
+    public void testIteratorEmptyArray() {
+        Iterator<Integer> it = list.iterator();
+        assertFalse(it.hasNext());
+        assertThrows(NoSuchElementException.class, () -> {
+            it.next();
+        });
+    }
+
+    @Test
     public void testIterator() {
         list.add(1);
         list.add(2);
@@ -321,11 +340,15 @@ public abstract class AbstractListTest {
 
         Integer[] listOfInteger = new Integer[4];
         int i = 0;
-        while(it.hasNext()) {
-            Integer obj = it.next();
-            listOfInteger[i] = obj;
+        while (it.hasNext()) {
+            Integer element = it.next();
+            listOfInteger[i] = element;
             i++;
         }
+
+        assertThrows(NoSuchElementException.class, () -> {
+            it.next();
+        });
 
         Integer one = 1;
         Integer two = 2;
@@ -333,5 +356,57 @@ public abstract class AbstractListTest {
         assertEquals(one, listOfInteger[0]);
         assertEquals(two, listOfInteger[1]);
         assertEquals(three, listOfInteger[2]);
+        assertNull(listOfInteger[3]);
+    }
+
+    @Test
+    public void testIteratorRemove() {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> it = list.iterator();
+        while (it.hasNext()) {
+            it.next();
+            it.remove();
+        }
+
+        assertEquals(0, list.size());
+    }
+
+    @Test
+    public void testIteratorRemoveFromMiddle() {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> it = list.iterator();
+        while (it.hasNext()) {
+            Integer value = it.next();
+            if (value == 2) {
+                it.remove();
+            }
+        }
+
+        assertEquals(2, list.size());
+        assertEquals("[1, 3]", list.toString());
+    }
+
+    @Test
+    public void testIteratorRemoveLast() {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> it = list.iterator();
+        while (it.hasNext()) {
+            Integer value = it.next();
+            if (value == 3) {
+                it.remove();
+            }
+        }
+
+        assertEquals(2, list.size());
+        assertEquals("[1, 2]", list.toString());
     }
 }

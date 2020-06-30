@@ -2,12 +2,14 @@ package com.study.datastructures.map;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class HashMap<K, V> implements Map<K, V> {
     private static final int INITIAL_CAPACITY = 5;
 
-    private ArrayList<Entry<K, V>>[] buckets = new ArrayList[INITIAL_CAPACITY];
+    @SuppressWarnings("unchecked")
+    private final ArrayList<Entry<K, V>>[] buckets = new ArrayList[INITIAL_CAPACITY];
     private int size;
 
     @Override
@@ -16,8 +18,8 @@ public class HashMap<K, V> implements Map<K, V> {
 
         Entry<K, V> entry = getEntry(key);
         if (entry != null) {
-            oldValue = entry.value;
-            entry.value = value;
+            oldValue = entry.getValue();
+            entry.setValue(value);
         } else {
             add(key, value);
         }
@@ -30,7 +32,7 @@ public class HashMap<K, V> implements Map<K, V> {
     public V get(K key) {
         Entry<K, V> entry = getEntry(key);
         if (entry != null) {
-            return entry.value;
+            return entry.getValue();
         }
         return null;
     }
@@ -45,8 +47,8 @@ public class HashMap<K, V> implements Map<K, V> {
 
         for (int i = 0; i < buckets[numBucket].size(); i++) {
             Entry<K, V> currentEntry = buckets[numBucket].get(i);
-            if (Objects.equals(currentEntry.key, key)) {
-                V removedValue = currentEntry.value;
+            if (Objects.equals(currentEntry.getKey(), key)) {
+                V removedValue = currentEntry.getValue();
                 buckets[numBucket].remove(i);
                 size--;
                 return removedValue;
@@ -57,6 +59,11 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public void putAll(Map<K, V> map) {
+        Iterator<Entry<K, V>> iterator = map.iterator();
+        while (iterator.hasNext()) {
+            Entry<K, V> entry = iterator.next();
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
@@ -92,10 +99,11 @@ public class HashMap<K, V> implements Map<K, V> {
             return null;
         }
         for (Entry<K, V> entry : buckets[numBucket]) {
-           if (Objects.equals(entry.key, key)) {
-               return entry;
-           }
+            if (Objects.equals(entry.getKey(), key)) {
+                return entry;
+            }
         }
+        return null;
     }
 
     private void add(K key, V value) {
@@ -116,11 +124,11 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new HashMapIterator<>();
+        return new HashMapIterator();
     }
 
-    private class HashMapIterator<Entry<K,V>> implements Iterator<Entry<K,V>> {
-        private int num = -1;
+    private class HashMapIterator implements Iterator<Entry<K, V>> {
+        private int num = 0;
         private int numBucket = 0;
         private int numInBucket = -1;
 
@@ -130,20 +138,28 @@ public class HashMap<K, V> implements Map<K, V> {
         }
 
         @Override
-        public Entry<K,V> next() {
+        public Entry<K, V> next() {
+            if (num == size) {
+                throw new NoSuchElementException();
+            }
             num++;
-            while (buckets[numBucket] != null) {
-                if (numInBucket < buckets[numBucket].size()) {
-                    numInBucket++;
-                } else {
-                    numBucket++;
-                    numInBucket = -1;
-                }
+            while (buckets[numBucket] == null || numInBucket == buckets[numBucket].size() - 1) {
+                numBucket++;
+                numInBucket = -1;
+            }
+            if (numInBucket < buckets[numBucket].size() - 1) {
+                numInBucket++;
             }
             return buckets[numBucket].get(numInBucket);
         }
+
+        @Override
+        public void remove() {
+            Entry<K, V> currentEntry = buckets[numBucket].get(numInBucket);
+            HashMap.this.remove(currentEntry.getKey());
+            numInBucket--;
+            num--;
+        }
     }
-
-
 
 }

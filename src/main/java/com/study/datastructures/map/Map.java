@@ -1,6 +1,6 @@
 package com.study.datastructures.map;
 
-public interface Map<K, V> extends Iterable<Entry<K,V>>{
+public interface Map<K, V> extends Iterable<Map.Entry<K, V>> {
     V put(K key, V value);
 
     V get(K key);
@@ -16,4 +16,27 @@ public interface Map<K, V> extends Iterable<Entry<K,V>>{
     boolean isEmpty();
 
     boolean containsKey(K key);
+
+    class Entry<K, V> {
+        private final K key;
+        private V value;
+
+        public Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+
+        public void setValue(V value) {
+            this.value = value;
+        }
+    }
+
 }

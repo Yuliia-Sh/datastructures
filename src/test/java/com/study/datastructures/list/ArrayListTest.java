@@ -2,6 +2,8 @@ package com.study.datastructures.list;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class ArrayListTest extends AbstractListTest {
 
     protected List<Integer> getList() {
@@ -21,5 +23,11 @@ public class ArrayListTest extends AbstractListTest {
     public void testArrayWith0InitialCapacity() {
         List<Integer> list = new ArrayList<Integer>(0);
         list.add(1);
+    }
+
+    @Test
+    public void testArrayWithoutInitialCapacity() {
+        List<Integer> list = new ArrayList<Integer>();
+        assertEquals(0, list.size());
     }
 }
