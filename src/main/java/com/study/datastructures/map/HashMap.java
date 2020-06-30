@@ -1,6 +1,7 @@
 package com.study.datastructures.map;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class HashMap<K, V> implements Map<K, V> {
@@ -84,24 +85,25 @@ public class HashMap<K, V> implements Map<K, V> {
         return (get(key) != null);
     }
 
+
     private Entry<K, V> getEntry(K key) {
         int numBucket = getBucketIndex(key);
-        if (buckets[numBucket] != null) {
-            for (Entry<K, V> entry : buckets[numBucket]) {
-                if (Objects.equals(entry.key, key)) {
-                    return entry;
-                }
-            }
+        if (buckets[numBucket] == null) {
+            return null;
         }
-        return null;
+        for (Entry<K, V> entry : buckets[numBucket]) {
+           if (Objects.equals(entry.key, key)) {
+               return entry;
+           }
+        }
     }
 
     private void add(K key, V value) {
-        int numBucket = getBucketIndex(key);
-        if (buckets[numBucket] == null) {
-            buckets[numBucket] = new ArrayList<>();
+        int bucketIndex = getBucketIndex(key);
+        if (buckets[bucketIndex] == null) {
+            buckets[bucketIndex] = new ArrayList<>();
         }
-        buckets[numBucket].add(new Entry<K, V>(key, value));
+        buckets[bucketIndex].add(new Entry<K, V>(key, value));
         size++;
     }
 
@@ -112,13 +114,36 @@ public class HashMap<K, V> implements Map<K, V> {
         return Math.abs(key.hashCode()) % INITIAL_CAPACITY;
     }
 
-    private static class Entry<K, V> {
-        private final K key;
-        private V value;
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return new HashMapIterator<>();
+    }
 
-        public Entry(K key, V value) {
-            this.key = key;
-            this.value = value;
+    private class HashMapIterator<Entry<K,V>> implements Iterator<Entry<K,V>> {
+        private int num = -1;
+        private int numBucket = 0;
+        private int numInBucket = -1;
+
+        @Override
+        public boolean hasNext() {
+            return num < size;
+        }
+
+        @Override
+        public Entry<K,V> next() {
+            num++;
+            while (buckets[numBucket] != null) {
+                if (numInBucket < buckets[numBucket].size()) {
+                    numInBucket++;
+                } else {
+                    numBucket++;
+                    numInBucket = -1;
+                }
+            }
+            return buckets[numBucket].get(numInBucket);
         }
     }
+
+
+
 }

@@ -1,6 +1,6 @@
 package com.study.datastructures.map;
 
-public interface Map<K, V> {
+public interface Map<K, V> extends Iterable<Entry<K,V>>{
     V put(K key, V value);
 
     V get(K key);

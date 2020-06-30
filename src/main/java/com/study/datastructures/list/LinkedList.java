@@ -153,7 +153,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
     }
 
     private static class Node<T> {
-        T value;
+        private T value;
         private Node<T> next;
         private Node<T> prev;
 
