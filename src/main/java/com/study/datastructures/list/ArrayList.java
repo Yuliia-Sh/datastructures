@@ -100,6 +100,7 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
 
     private class ArrayListIterator implements Iterator<T> {
         private int currentPosition = -1;
+        private boolean isRemoved = true;
 
         @Override
         public boolean hasNext() {
@@ -112,12 +113,17 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
                 throw new NoSuchElementException();
             }
             currentPosition++;
+            isRemoved = false;
             return (T) array[currentPosition];
         }
 
         @Override
         public void remove() {
+            if (currentPosition == -1 || isRemoved) {
+                throw new IllegalStateException();
+            }
             ArrayList.this.remove(currentPosition);
+            isRemoved = true;
             if (currentPosition >= 0 && currentPosition != size) {
                 currentPosition--;
             }

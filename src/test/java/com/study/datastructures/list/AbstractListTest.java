@@ -409,4 +409,33 @@ public abstract class AbstractListTest {
         assertEquals(2, list.size());
         assertEquals("[1, 2]", list.toString());
     }
+
+
+    @Test
+    public void testIteratorRemoveBeforeNext() {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> it = list.iterator();
+        assertThrows(IllegalStateException.class, () -> {
+            it.remove();
+        });
+
+    }
+
+    @Test
+    public void testIteratorRemoveTwice() {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> it = list.iterator();
+        it.next();
+        it.remove();
+        assertThrows(IllegalStateException.class, () -> {
+            it.remove();
+        });
+
+    }
 }

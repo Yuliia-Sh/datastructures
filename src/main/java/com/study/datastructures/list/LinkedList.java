@@ -154,6 +154,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
     private class LinkedListIterator implements Iterator<T> {
         private Node<T> currentNode = head;
         private boolean isFirstElement = true;
+        private boolean isRemoved = false;
 
         @Override
         public boolean hasNext() {
@@ -173,11 +174,15 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
             } else {
                 currentNode = currentNode.next;
             }
+            isRemoved = false;
             return currentNode.value;
         }
 
         @Override
         public void remove() {
+            if (isFirstElement || isRemoved) {
+                throw new IllegalStateException();
+            }
             if (currentNode == head && size > 1) {
                 isFirstElement = true;
             }
@@ -188,6 +193,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
             } else {
                 currentNode = prevNode;
             }
+            isRemoved = true;
         }
     }
 

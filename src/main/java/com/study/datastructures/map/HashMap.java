@@ -39,17 +39,17 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public V remove(K key) {
-        int numBucket = getBucketIndex(key);
+        int bucketIndex = getBucketIndex(key);
 
-        if (buckets[numBucket] == null) {
+        if (buckets[bucketIndex] == null) {
             return null;
         }
 
-        for (int i = 0; i < buckets[numBucket].size(); i++) {
-            Entry<K, V> currentEntry = buckets[numBucket].get(i);
+        for (int i = 0; i < buckets[bucketIndex].size(); i++) {
+            Entry<K, V> currentEntry = buckets[bucketIndex].get(i);
             if (Objects.equals(currentEntry.getKey(), key)) {
                 V removedValue = currentEntry.getValue();
-                buckets[numBucket].remove(i);
+                buckets[bucketIndex].remove(i);
                 size--;
                 return removedValue;
             }
@@ -92,13 +92,17 @@ public class HashMap<K, V> implements Map<K, V> {
         return (get(key) != null);
     }
 
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return new HashMapIterator();
+    }
 
     private Entry<K, V> getEntry(K key) {
-        int numBucket = getBucketIndex(key);
-        if (buckets[numBucket] == null) {
+        int bucketIndex = getBucketIndex(key);
+        if (buckets[bucketIndex] == null) {
             return null;
         }
-        for (Entry<K, V> entry : buckets[numBucket]) {
+        for (Entry<K, V> entry : buckets[bucketIndex]) {
             if (Objects.equals(entry.getKey(), key)) {
                 return entry;
             }
@@ -111,7 +115,7 @@ public class HashMap<K, V> implements Map<K, V> {
         if (buckets[bucketIndex] == null) {
             buckets[bucketIndex] = new ArrayList<>();
         }
-        buckets[bucketIndex].add(new Entry<K, V>(key, value));
+        buckets[bucketIndex].add(new Entry<>(key, value));
         size++;
     }
 
@@ -120,11 +124,6 @@ public class HashMap<K, V> implements Map<K, V> {
             return 0;
         }
         return Math.abs(key.hashCode()) % INITIAL_CAPACITY;
-    }
-
-    @Override
-    public Iterator<Entry<K, V>> iterator() {
-        return new HashMapIterator();
     }
 
     private class HashMapIterator implements Iterator<Entry<K, V>> {
