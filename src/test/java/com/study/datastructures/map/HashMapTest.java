@@ -139,17 +139,18 @@ public class HashMapTest {
     @Test
     public void testIterator() {
         Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
-        hashMap.put("key1", "value1");
-        hashMap.put("key2", "value2");
-        assertTrue(iterator.hasNext());
-        Map.Entry<String, String> entryFirst = iterator.next();
-        assertTrue(hashMap.containsKey(entryFirst.getKey()));
+        for (int i = 0; i < 50; i++) {
+            hashMap.put("key" + i, "value" + i);
+        }
 
-        assertTrue(iterator.hasNext());
-        Map.Entry<String, String> entrySecond = iterator.next();
-        assertTrue(hashMap.containsKey(entrySecond.getKey()));
-        assertFalse(iterator.hasNext());
+        int i = 0;
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entryFirst = iterator.next();
+            assertTrue(hashMap.containsKey(entryFirst.getKey()));
+            i++;
+        }
 
+        assertEquals(50, i);
         assertThrows(NoSuchElementException.class, () -> {
             iterator.next();
         });
