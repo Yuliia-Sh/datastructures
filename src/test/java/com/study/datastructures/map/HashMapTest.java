@@ -188,6 +188,28 @@ public class HashMapTest {
         assertEquals(4, hashMap.size());
         assertFalse(hashMap.containsKey("key2"));
         assertFalse(hashMap.containsKey("key4"));
-
     }
+
+    @Test
+    public void testIteratorRemoveBeforeNext() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+        hashMap.put("key3", "value3");
+
+        assertThrows(IllegalStateException.class, iterator::remove);
+    }
+
+    @Test
+    public void testIteratorRemoveTwice() {
+        Iterator<Map.Entry<String, String>> iterator = hashMap.iterator();
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+        hashMap.put("key3", "value3");
+
+        iterator.next();
+        iterator.remove();
+        assertThrows(IllegalStateException.class, iterator::remove);
+    }
+
 }

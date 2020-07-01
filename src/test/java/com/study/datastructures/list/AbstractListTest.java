@@ -418,10 +418,7 @@ public abstract class AbstractListTest {
         list.add(3);
 
         Iterator<Integer> it = list.iterator();
-        assertThrows(IllegalStateException.class, () -> {
-            it.remove();
-        });
-
+        assertThrows(IllegalStateException.class, it::remove);
     }
 
     @Test
@@ -433,9 +430,6 @@ public abstract class AbstractListTest {
         Iterator<Integer> it = list.iterator();
         it.next();
         it.remove();
-        assertThrows(IllegalStateException.class, () -> {
-            it.remove();
-        });
-
+        assertThrows(IllegalStateException.class, it::remove);
     }
 }

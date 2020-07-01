@@ -130,6 +130,7 @@ public class HashMap<K, V> implements Map<K, V> {
         private int num = 0;
         private int numBucket = 0;
         private int numInBucket = -1;
+        private boolean isRemoved = true;
 
         @Override
         public boolean hasNext() {
@@ -149,15 +150,20 @@ public class HashMap<K, V> implements Map<K, V> {
             if (numInBucket < buckets[numBucket].size() - 1) {
                 numInBucket++;
             }
+            isRemoved = false;
             return buckets[numBucket].get(numInBucket);
         }
 
         @Override
         public void remove() {
+            if (isRemoved) {
+                throw new IllegalStateException();
+            }
             Entry<K, V> currentEntry = buckets[numBucket].get(numInBucket);
             HashMap.this.remove(currentEntry.getKey());
             numInBucket--;
             num--;
+            isRemoved = true;
         }
     }
 
