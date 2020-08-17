@@ -1,6 +1,6 @@
 package com.study.datastructures.list;
 
-public abstract class AbstractList<T> {
+public abstract class AbstractList<T> implements List<T> {
     protected int size;
 
     public int size() {
@@ -18,10 +18,6 @@ public abstract class AbstractList<T> {
     public void add(T value) {
         add(value, size);
     }
-
-    protected abstract void add(T value, int index);
-
-    protected abstract int indexOf(T value);
 
     protected void validateIndex(int index) {
         if (index < 0 || index >= size) {

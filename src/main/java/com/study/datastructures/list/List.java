@@ -25,5 +25,9 @@ public interface List<T> extends Iterable<T> {
 
     int lastIndexOf(T value);
 
+    /**
+     *
+     * @return [A, B, C]
+     */
     String toString();
 }

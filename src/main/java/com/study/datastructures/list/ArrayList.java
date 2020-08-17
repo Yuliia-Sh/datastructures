@@ -2,21 +2,17 @@ package com.study.datastructures.list;
 
 import java.util.*;
 
-public class ArrayList<T> extends AbstractList<T> implements List<T> {
+public class ArrayList<T> extends AbstractList<T>  {
     private final static int DEFAULT_INITIAL_CAPACITY = 10;
     private T[] array;
 
-    @SuppressWarnings("unchecked")
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity == 0) {
-            array = (T[]) new Object[DEFAULT_INITIAL_CAPACITY];
-        } else {
-            array = (T[]) new Object[initialCapacity];
-        }
-    }
-
     public ArrayList() {
         this(DEFAULT_INITIAL_CAPACITY);
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList(int initialCapacity) {
+       array = (T[]) new Object[initialCapacity];
     }
 
     public void add(T value, int index) {
@@ -37,6 +33,7 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
         if (index != size - 1) {
             System.arraycopy(array, index + 1, array, index, size - index - 1);
         }
+        array[size - 1] = null;
         size--;
         return removedObject;
     }
@@ -94,7 +91,10 @@ public class ArrayList<T> extends AbstractList<T> implements List<T> {
 
 
     private void extendArray() {
-        int newCapacity = (int) Math.round(array.length * 1.5);
+        int newCapacity = 1;
+        if (array.length != 0) {
+           newCapacity = (int) Math.round(array.length * 1.5);
+        }
         array = Arrays.copyOfRange(array, 0, newCapacity);
     }
 

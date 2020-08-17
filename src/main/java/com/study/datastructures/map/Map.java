@@ -17,26 +17,11 @@ public interface Map<K, V> extends Iterable<Map.Entry<K, V>> {
 
     boolean containsKey(K key);
 
-    class Entry<K, V> {
-        private final K key;
-        private V value;
+    interface Entry<K, V> {
 
-        public Entry(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
+        K getKey();
 
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
-        }
-
-        public void setValue(V value) {
-            this.value = value;
-        }
+        V getValue();
     }
 
 }

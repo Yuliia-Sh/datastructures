@@ -1,13 +1,13 @@
 package com.study.datastructures.map;
 
-import org.junit.Test;
 
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HashMapTest {
     private HashMap<String, String> hashMap = new HashMap<>();
@@ -145,8 +145,9 @@ public class HashMapTest {
 
         int i = 0;
         while (iterator.hasNext()) {
-            Map.Entry<String, String> entryFirst = iterator.next();
-            assertTrue(hashMap.containsKey(entryFirst.getKey()));
+            Map.Entry<String, String> entry = iterator.next();
+            System.out.println(entry.getKey());
+            assertTrue(hashMap.containsKey(entry.getKey()));
             i++;
         }
 

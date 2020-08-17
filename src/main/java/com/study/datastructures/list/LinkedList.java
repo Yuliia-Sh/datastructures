@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class LinkedList<T> extends AbstractList<T> implements List<T> {
+public class LinkedList<T> extends AbstractList<T>  {
     private Node<T> head;
     private Node<T> tail;
 
@@ -127,7 +127,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
         return node;
     }
 
-    public T removeNode(Node<T> nodeToRemove) {
+    private T removeNode(Node<T> nodeToRemove) {
         if (size == 1) {
             head = null;
             tail = null;
@@ -202,7 +202,7 @@ public class LinkedList<T> extends AbstractList<T> implements List<T> {
         private Node<T> next;
         private Node<T> prev;
 
-        public Node(T value) {
+        private Node(T value) {
             this.value = value;
         }
     }

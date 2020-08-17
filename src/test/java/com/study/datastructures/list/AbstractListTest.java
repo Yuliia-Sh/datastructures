@@ -1,13 +1,12 @@
 package com.study.datastructures.list;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractListTest {
     private List<Integer> list = getList();
