@@ -25,6 +25,26 @@ public class HashMapTest {
     }
 
     @Test
+    public void testPutMultipleTimesWithNullKey() {
+        assertNull(hashMap.put(null, "value1"));
+        assertEquals(1, hashMap.size());
+
+        assertEquals("value1", hashMap.put(null, "value2"));
+        assertEquals(1, hashMap.size());
+        assertEquals("value2", hashMap.get(null));
+    }
+
+    @Test
+    public void testPutMultipleTimesWithSameKey() {
+        hashMap.put("key", "value1");
+        hashMap.put("key", "value2");
+        hashMap.put("key", "value3");
+
+        assertEquals(1, hashMap.size());
+        assertEquals("value3", hashMap.get("key"));
+    }
+
+    @Test
     public void testPutAndGet() {
         assertNull(hashMap.put("key1", "value1"));
         assertEquals("value1", hashMap.get("key1"));
@@ -33,9 +53,29 @@ public class HashMapTest {
     }
 
     @Test
+    public void testPutAndGetSomePairs() {
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+
+        assertEquals("value1", hashMap.get("key1"));
+        assertEquals("value2", hashMap.get("key2"));
+        assertEquals(2, hashMap.size());
+    }
+
+    @Test
     public void testPutAndGetNullKey() {
         assertNull(hashMap.put(null, "value1"));
         assertEquals("value1", hashMap.get(null));
+    }
+
+    @Test
+    public void testGetNullKeyFromEmptyMap() {
+        assertNull(hashMap.get(null));
+    }
+
+    @Test
+    public void testGetFromEmptyMap() {
+        assertNull(hashMap.get("key"));
     }
 
     @Test
@@ -58,6 +98,60 @@ public class HashMapTest {
     @Test
     public void testRemoveFromEmptyMap() {
         assertNull(hashMap.remove("key1"));
+        assertEquals(0, hashMap.size());
+    }
+
+    @Test
+    public void testRemoveFromEmptyMapNullKey() {
+        assertNull(hashMap.remove(null));
+        assertEquals(0, hashMap.size());
+    }
+
+    @Test
+    public void testRemoveNullKey() {
+        hashMap.put(null, "value");
+        hashMap.remove(null);
+        assertEquals(0, hashMap.size());
+    }
+
+    @Test
+    public void testRemoveNullKeyFromNotEmptyMap() {
+        hashMap.put("key", "value");
+        hashMap.put(null, "value");
+
+        hashMap.remove(null);
+
+        assertEquals(1, hashMap.size());
+    }
+
+    @Test
+    public void testRemoveOneByOne() {
+        hashMap.put("key1", "value1");
+        hashMap.put("key2", "value2");
+        hashMap.put("key3", "value3");
+        hashMap.put("key4", "value4");
+        hashMap.put("key5", "value5");
+        hashMap.put("key6", "value6");
+
+        assertEquals(6, hashMap.size());
+
+        hashMap.remove("key1");
+        assertEquals(5, hashMap.size());
+
+        hashMap.remove("key2");
+        assertEquals(4, hashMap.size());
+
+        hashMap.remove("key3");
+        assertEquals(3, hashMap.size());
+
+        hashMap.remove("key4");
+        assertEquals(2, hashMap.size());
+
+        hashMap.remove("key5");
+        assertEquals(1, hashMap.size());
+
+        hashMap.remove("key6");
+        assertEquals(0, hashMap.size());
     }
 
     @Test
@@ -121,6 +215,19 @@ public class HashMapTest {
         assertTrue(hashMap.containsKey("key1"));
         assertTrue(hashMap.containsKey("key2"));
         assertFalse(hashMap.containsKey("key3"));
+        assertFalse(hashMap.containsKey(null));
+    }
+
+    @Test
+    public void testContainsKeyInEmptyMap() {
+        assertFalse(hashMap.containsKey("key"));
+        assertFalse(hashMap.containsKey(null));
+    }
+
+    @Test
+    public void testContainsNullKey() {
+        hashMap.put(null, "value");
+        assertTrue(hashMap.containsKey(null));
     }
 
     @Test
