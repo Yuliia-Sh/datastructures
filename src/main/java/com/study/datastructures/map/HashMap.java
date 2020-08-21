@@ -7,19 +7,19 @@ import java.util.Objects;
 public class HashMap<K, V> implements Map<K, V> {
     private static final int INITIAL_CAPACITY = 5;
 
-    private final Entry[] buckets = new Entry[INITIAL_CAPACITY];
+    private final Entry<K, V>[] buckets = new Entry[INITIAL_CAPACITY];
     private int size;
 
     @Override
     public V put(K key, V value) {
         V oldValue = null;
 
-        Entry<K, V> entry = new Entry<>(key, value);
-        Entry<K, V> oldEntry = findEntryByKey(entry);
+        Entry<K, V> oldEntry = getEntry(key);
         if (oldEntry != null) {
             oldValue = oldEntry.getValue();
             oldEntry.setValue(value);
         } else {
+            Entry<K, V> entry = new Entry<>(key, value);
             add(entry);
         }
 
@@ -105,28 +105,23 @@ public class HashMap<K, V> implements Map<K, V> {
         return new HashMapIterator();
     }
 
-    private Entry<K, V> findEntryByKey(Entry<K, V> entry) {
-        int bucketIndex = getBucketIndexByHash(entry.getHash());
-        if (buckets[bucketIndex] == null) {
-            return null;
-        }
-        Entry<K, V> entryFound = buckets[bucketIndex];
-        while (entryFound != null && !Objects.equals(entry.getKey(), entryFound.getKey())) {
-            entryFound = entryFound.next;
-        }
-        return entryFound;
-    }
-
     private Entry<K, V> getEntry(K key) {
         int bucketIndex = getBucketIndex(key);
         if (buckets[bucketIndex] == null) {
             return null;
         }
         Entry<K, V> entry = buckets[bucketIndex];
-        while (entry != null && !Objects.equals(entry.getKey(), key)) {
+        int searchKeyHash = 0;
+        if (key != null) {
+            searchKeyHash = key.hashCode();
+        }
+        while (entry != null) {
+            if (entry.getHash() == searchKeyHash && Objects.equals(entry.getKey(), key)) {
+                return entry;
+            }
             entry = entry.next;
         }
-        return entry;
+        return null;
     }
 
     private void add(Entry<K, V> entry) {
@@ -158,11 +153,11 @@ public class HashMap<K, V> implements Map<K, V> {
         return getBucketIndexByHash(hash);
     }
 
-    private static class Entry<K, V> implements Map.Entry {
+    private static class Entry<K, V> implements Map.Entry<K, V> {
         private final int hash;
         private final K key;
         private V value;
-        Entry<K, V> next;
+        private Entry<K, V> next;
 
         public Entry(K key, V value) {
             this.key = key;
@@ -188,13 +183,15 @@ public class HashMap<K, V> implements Map<K, V> {
             this.value = value;
         }
 
-        public int getHash() { return hash;}
+        public int getHash() {
+            return hash;
+        }
     }
 
     private class HashMapIterator implements Iterator<Map.Entry<K, V>> {
         private int currentNumber;
         private int currentBucket = -1;
-        Entry<K, V> currentEntry;
+        private Entry<K, V> currentEntry;
         private boolean isRemoved = true;
 
         @Override
@@ -220,13 +217,6 @@ public class HashMap<K, V> implements Map<K, V> {
             return currentEntry;
         }
 
-        private void findNextCurrentEntry() {
-            while (currentEntry == null && currentBucket < buckets.length) {
-                currentBucket++;
-                currentEntry = buckets[currentBucket];
-            }
-        }
-
         @Override
         public void remove() {
             if (isRemoved) {
@@ -235,6 +225,13 @@ public class HashMap<K, V> implements Map<K, V> {
             HashMap.this.remove(currentEntry.getKey());
             currentNumber--;
             isRemoved = true;
+        }
+
+        private void findNextCurrentEntry() {
+            while (currentEntry == null && currentBucket < buckets.length) {
+                currentBucket++;
+                currentEntry = buckets[currentBucket];
+            }
         }
     }
 
